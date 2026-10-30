@@ -1,0 +1,246 @@
+﻿<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>IELTS AI Mentor</title>
+    <style>
+        body {
+            background: #0f172a;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+        }
+        .box {
+            background: #1e293b;
+            padding: 35px;
+            border-radius: 15px;
+            width: 100%;
+            max-width: 650px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+        }
+        input, select, button {
+            width: 100%;
+            padding: 12px;
+            margin-top: 15px;
+            border-radius: 8px;
+            border: 1px solid #475569;
+            background: #0f172a;
+            color: #fff;
+            font-size: 16px;
+        }
+        button {
+            background: #6366f1;
+            border: none;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        button:hover {
+            background: #4f46e5;
+        }
+        .skill-block {
+            background: #0f172a;
+            padding: 15px;
+            border-radius: 10px;
+            margin-top: 15px;
+            border-left: 4px solid #38bdf8;
+        }
+        .skill-block h3 {
+            margin: 0 0 8px 0;
+            color: #38bdf8;
+            font-size: 16px;
+        }
+        .skill-block ul {
+            margin: 0;
+            padding-left: 20px;
+            color: #cbd5e1;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+        .skill-block li {
+            margin-bottom: 5px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="box">
+    <!-- Forma qismi -->
+    <div id="formPart">
+        <h2>IELTS AI Mentor</h2>
+        <p>Ismingizni kiriting:</p>
+        <input type="text" id="nameInput" placeholder="Ism...">
+        
+        <p>Hozirgi darajangizni tanlang:</p>
+        <select id="levelInput">
+            <option value="5.0">Band 5.0 (Boshlang'ich/O'rta)</option>
+            <option value="5.5">Band 5.5 (O'rta)</option>
+            <option value="6.0">Band 6.0 (Yaxshi o'rta)</option>
+            <option value="6.5">Band 6.5 (Yuqori o'rta)</option>
+        </select>
+
+        <button onclick="bosildi()">AI Darajali Tahlilni Ko'rish</button>
+    </div>
+
+    <!-- Natija qismi -->
+    <div id="result" style="display: none;">
+        <h2 id="greeting" style="color: #38bdf8; text-align: center; margin-bottom: 10px;"></h2>
+        <p id="levelDesc" style="text-align: center; color: #94a3b8; font-size: 14px; margin-bottom: 20px;"></p>
+
+        <div class="skill-block">
+            <h3>🎧 Listening Feedback:</h3>
+            <ul id="lList"></ul>
+        </div>
+
+        <div class="skill-block" style="border-color: #34d399;">
+            <h3 style="color: #34d399;">📖 Reading Feedback:</h3>
+            <ul id="rList"></ul>
+        </div>
+
+        <div class="skill-block" style="border-color: #f43f5e;">
+            <h3 style="color: #f43f5e;">✍️ Writing Feedback:</h3>
+            <ul id="wList"></ul>
+        </div>
+
+        <div class="skill-block" style="border-color: #fbbf24;">
+            <h3 style="color: #fbbf24;">🗣️ Speaking Feedback:</h3>
+            <ul id="sList"></ul>
+        </div>
+
+        <button onclick="qaytish()" style="margin-top: 20px;">Qaytadan Kiritish</button>
+    </div>
+</div>
+
+<script>
+    function bosildi() {
+        var ismi = document.getElementById('nameInput').value;
+        var darajasi = document.getElementById('levelInput').value;
+
+        if (ismi.trim() === "") {
+            alert("Iltimos, ismingizni yozing!");
+            return;
+        }
+
+        document.getElementById('formPart').style.display = 'none';
+        document.getElementById('result').style.display = 'block';
+        document.getElementById('greeting').innerText = "Salom, " + ismi + "! Sizning tanlagan darajangiz: Band " + darajasi;
+
+        var lHtml = "";
+        var rHtml = "";
+        var wHtml = "";
+        var sHtml = "";
+        var descText = "";
+
+        if (darajasi === "5.0") {
+            descText = "AI Tahlili: Sizda bazaviy tushunchalar bor, lekin grammatika va so'z boyligini keskin oshirish kerak.";
+            lHtml = `
+                <li>Asosiy e'tiborni Section 1 va Section 2 larga qarating, chunki ularda bal yig'ish osonroq.</li>
+                <li>Har kuni ingliz tilida sekin tezlikdagi audiolarni eshitib, so'zlarni qanday aytilishiga qarang.</li>
+                <li>Imro xatolarini kamaytirish uchun eshitgan so'zlaringizni darhol daftarga yozib mashq qiling.</li>
+            `;
+            rHtml = `
+                <li>True/False/Not Given savollarida adashmaslik uchun matndagi ma'no mosligini solishtirishni o'rganing.</li>
+                <li>Lug'at boyligingizni oshirish uchun osonroq maqolalar va hikoyalar o'qishdan boshlang.</li>
+                <li>Har kuni kamida 15 ta yangi akademik so'z yodlab, ularni jumla tuzib ishlatib ko'ring.</li>
+            `;
+            wHtml = `
+                <li>Task 1 da grafikdagi eng asosiy ko'rsatkichlarni (eng yuqori va past nuqtalarni) yozishni o'rganing.</li>
+                <li>Task 2 da oddiy va tushunarli jumlalar tuzing, imro va zamon (tenses) xatolariga yo'l qo'ymang.</li>
+                <li>Har bir esse yozgandan so'ng uni lug'at yordamida qaytadan tekshirib chiqishni odat qiling.</li>
+            `;
+            sHtml = `
+                <li>Part 1 savollariga kamida 3-4 ta gap bilan batafsilroq javob berishga harakat qiling.</li>
+                <li>So'zlarni talaffuz qilganda ovozingizni aniq chiqarib, uyalmasdan gapirishni mashq qiling.</li>
+                <li>Kundalik mavzularda o'zingiz bilan o'zingiz inglizcha gaplashib, muloqot qo'rquvini yengib chiqing.</li>
+            `;
+        } 
+        else if (darajasi === "5.5") {
+            descText = "AI Tahlili: Siz o'rta darajadasiz, endi xatolarni kamaytirib, akademik so'zlarga o'tish vaqti keldi.";
+            lHtml = `
+                <li>Section 3 va Section 4 dagi akademik suhbatlarni tushunish uchun ilmiy podkastlar tinglang.</li>
+                <li>Savollardagi sinonimlarni oldindan topish qobiliyatini kuchaytiring (audioda boshqa so'z bilan aytiladi).</li>
+                <li>Har bir testdan keyin nima sababdan xato qilganingizni chuqur tahlil qiling.</li>
+            `;
+            rHtml = `
+                <li>Matching headings va Paragraph information savollariga alohida vaqt ajratib ishlang.</li>
+                <li>Matnni o'qiyotganda kalit so'zlarni tez topish (Scanning) tezligini oshiring.</li>
+                <li>Vaqt yetishmovchiligini oldini olish uchun har bir passagelarga qat'iy 20 daqiqa belgilang.</li>
+            `;
+            wHtml = `
+                <li>Task 1 da raqamlarni shunchaki sanab o'tmasdan, ularni o'zaro solishtirib (comparison) yozing.</li>
+                <li>Task 2 da o'z fikringizni aniq argumentlar va hayotiy misollar bilan dalillang.</li>
+                <li>Kirish va xulosa qismlarini yozish qoliplarini (templates) mukammal yodlab oling.</li>
+            `;
+            sHtml = `
+                <li>Part 2 da 2 daqiqa davomida to'xtab qolmasdan gapirish uchun qog'ozga reja yozishni o'rganing.</li>
+                <li>Oddiy so'zlar (good, bad, nice) o'rniga sinonim akademik so'zlardan foydalaning.</li>
+                <li>Grammatikada o'tgan zamon va kelasi zamonlarni aralashtirmasdan to'g'ri qo'llang.</li>
+            `;
+        }
+        else if (darajasi === "6.0") {
+            descText = "AI Tahlili: Sizda baza juda yaxshi! Endi 6.5+ ga chiqish uchun kichik detallar va mukammal strukturaga e'tibor bering.";
+            lHtml = `
+                <li>Listening paytida chalg'ib qolmaslik uchun keyingi savollarni doim oldindan o'qib turing.</li>
+                <li>Multiple choice (tanlovli) savollarda chalg'ituvchi variantlarga (distractors) e'tiborli bo'ling.</li>
+                <li>Xatolaringiz sonini haftasiga 5 tadan kamaytirishga qat'iy harakat qiling.</li>
+            `;
+            rHtml = `
+                <li>True/False/Not Given savollarida 'Not Given' ni topish bo'yicha maxsus testlar ishlang.</li>
+                <li>Akademik jurnallar va murakkab ilmiy maqolalar o'qishni kundalik odatga aylantiring.</li>
+                <li>Har bir testni 17-18 daqiqada tugatib, oxirida javoblarni tekshirishga vaqt qoldiring.</li>
+            `;
+            wHtml = `
+                <li>Task 2 da 'Complex sentences' (murakkab qo'shma gaplar) va nisbiy olmoshlarni ko'proq ishlating.</li>
+                <li>Esse tuzilishida 'Coherence and Cohesion' (mantiqiy bog'liqlik) qismiga alohida e'tibor bering.</li>
+                <li>Task 1 da ma'lumotlarni umumlashtirib (overview) yozish malakasini mukammallashtiring.</li>
+            `;
+            sHtml = `
+                <li>Part 3 da murakkab ijtimoiy va global savollarga mantiqiy, chuqur fikr bildirib javob bering.</li>
+                <li>Nutqingizni tabiiy qilish uchun idiomalardan o'rnida va me'yorida foydalaning.</li>
+                <li>Talaffuzda urg'u (stress) va ohang (intonatsiya) qoidalariga amal qiling.</li>
+            `;
+        }
+        else if (darajasi === "6.5") {
+            descText = "AI Tahlili: Siz yuqori darajadasiz! Maqsad Band 7.0+ ga chiqish va mutlaqo mukammallikka erishish.";
+            lHtml = `
+                <li>Audio tezligini 1.25x qilib eshitish orqali quloqni tezkor nutqqa o'rgating.</li>
+                <li>Form/Note completion savollarida so'z limitiga qat'iy amal qiling.</li>
+                <li>Barcha 40 ta savoldan kamida 35 tadan ko'p topishni o'zingizga talab qilib qo'ying.</li>
+            `;
+            rHtml = `
+                <li>Akademik matnlardagi muallifning nuqtai nazarini (Writer's views) aniqlash bo'yicha murakkab testlar ishlang.</li>
+                <li>Vaqtni tejash uchun har bir paragrafni to'liq o'qimasdan asosiy g'oyani topish (Skimming) texnikasini mukammal qo'llang.</li>
+                <li>Xatolaringizni tahlil qilish uchun xato daftarchasini yuriting.</li>
+            `;
+            wHtml = `
+                <li>Task 2 da akademik uslubni (Academic tone) saqlagan holda kuchli va ishonchli dalillar keltiring.</li>
+                <li>Grammatik jihatdan mukammal va xatosiz murakkab jumlalar tuzishni odat qiling.</li>
+                <li>Vaqtni qat'iy nazorat qiling: Task 1 ga 20 daqiqa, Task 2 ga 40 daqiqa ajrating.</li>
+            `;
+            sHtml = `
+                <li>Part 2 va Part 3 da so'z boyligini (Lexical Resource) namoyish etish uchun kam ishlatiladigan akademik so'zlar va idiomlardan foydalaning.</li>
+                <li>Grammatik xatolarga yo'l qo'ymasdan ravon va tabiiy ohangda gapiring.</li>
+                <li>Savollarga javob berishda shablon gaplardan qochib, o'z shaxsiy fikringizni bildiring.</li>
+            `;
+        }
+
+        document.getElementById('levelDesc').innerText = descText;
+        document.getElementById('lList').innerHTML = lHtml;
+        document.getElementById('rList').innerHTML = rHtml;
+        document.getElementById('wList').innerHTML = wHtml;
+        document.getElementById('sList').innerHTML = sHtml;
+    }
+
+    function qaytish() {
+        document.getElementById('result').style.display = 'none';
+        document.getElementById('formPart').style.display = 'block';
+        document.getElementById('nameInput').value = '';
+    }
+</script>
+
+</body>
+</html>
